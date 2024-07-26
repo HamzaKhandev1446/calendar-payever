@@ -1,22 +1,14 @@
-<div class="calendar">
-  <div class="day">
-    <div *ngFor="let hour of hours" class="hour" cdkDropList [cdkDropListData]="appointmentsByHour[hour]" (cdkDropListDropped)="drop($event)" 
-    (click)="openDialog()">
-      <div class="hour-label">{{ hour }}</div>
-      <div class="appointments">
-        <div *ngFor="let appointment of appointmentsByHour[hour]" cdkDrag class="appointment" (dblclick)="editAppointment(appointment)">
-          {{ appointment.title }}
-          <button (click)="deleteAppointment(appointment)">Delete</button>
+<div class="calendar p-4">
+  <div class="day grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div *ngFor="let hour of hours" class="hour p-4 bg-white shadow-lg rounded-xl border-l-8 border-gray-300 hover:border-gray-700 transition duration-300 ease-in-out" cdkDropList [cdkDropListData]="appointmentsByHour[hour]" (click)="selectSlot(hour, $event)">
+      <div class="hour-label text-lg font-bold">{{ hour }}</div>
+        <div *ngFor="let appointment of appointmentsByHour[hour]" cdkDrag class="appointment p-2 bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg shadow-sm cursor-pointer flex justify-between items-center border-l-8 border-green-200 hover:border-green-500 transition duration-300 ease-in-out" (dblclick)="openDialog(appointment, $event)">
+          <span>{{ appointment.title }}</span>
+          <button mat-icon-button color="warn" (click)="deleteAppointment(appointment, $event)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
-      </div>
+
     </div>
   </div>
-</div>
-
-<div class="appointment-form">
-  <input [(ngModel)]="appointmentTitle" placeholder="Appointment Title">
-  <input [(ngModel)]="appointmentDate" type="datetime-local" placeholder="Appointment Date">
-  <button (click)="editingAppointment ? updateAppointment() : addAppointment()">
-    {{ editingAppointment ? 'Update' : 'Add' }} Appointment
-  </button>
 </div>

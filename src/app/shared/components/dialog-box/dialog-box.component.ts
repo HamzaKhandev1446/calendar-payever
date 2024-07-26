@@ -4,15 +4,13 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
+import moment from 'moment';
 
 export interface AppointmentData {
   title: string;
-  startTime: Date;
-  endTime: Date;
-  date: Date;
+  startTime: string; // ISO string
+  endTime: string; // ISO string
 }
 
 @Component({
@@ -23,12 +21,10 @@ export interface AppointmentData {
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     MatButtonModule,
   ],
   templateUrl: './dialog-box.component.html',
-  styleUrl: './dialog-box.component.scss'
+  styleUrls: ['./dialog-box.component.scss']
 })
 export class DialogBoxComponent {
   appointmentForm: FormGroup;
@@ -38,16 +34,24 @@ export class DialogBoxComponent {
     @Inject(MAT_DIALOG_DATA) public data: AppointmentData,
     private fb: FormBuilder
   ) {
+    // Convert startTime and endTime to hh:mm A format
+    const startTime = moment(data.startTime).format('hh:mm A');
+    const endTime = moment(data.endTime).format('hh:mm A');
+
     this.appointmentForm = this.fb.group({
       title: [data.title, Validators.required],
-      startTime: [data.startTime, Validators.required],
-      endTime: [data.endTime, Validators.required]
+      startTime: [startTime, Validators.required],
+      endTime: [endTime, Validators.required]
     });
   }
 
   onSave(): void {
     if (this.appointmentForm.valid) {
-      this.dialogRef.close(this.appointmentForm.value);
+      // Convert startTime and endTime back to ISO string before returning
+      const formValue = this.appointmentForm.value;
+      const startTime = moment(formValue.startTime, 'hh:mm A').toISOString();
+      const endTime = moment(formValue.endTime, 'hh:mm A').toISOString();
+      this.dialogRef.close({ ...formValue, startTime, endTime });
     }
   }
 
