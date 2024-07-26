@@ -17,7 +17,6 @@ export class DatePickerComponent {
   @Output() setDate = new EventEmitter<Date | null>();
 
   onSelectedDate(event: Date | null) {
-    console.log('Selected date:', event);
     this.setDate.emit(event);
   }
 }
