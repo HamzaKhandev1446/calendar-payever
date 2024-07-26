@@ -3,7 +3,13 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'calendar',
-    loadComponent: () => import('./calendar/calendar.component').then(m => m.CalendarComponent)
+    loadComponent: () => import('./calendar/calendar.component').then(m => m.CalendarComponent),
+    children: [
+      {
+        path: 'day',
+        loadComponent: () => import('./appointments-day-view/appointments-day-view.component').then(m => m.AppointmentsDayViewComponent)
+      },
+    ]
   },
   {
     path: 'component1',
