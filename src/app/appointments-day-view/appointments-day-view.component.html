@@ -1,0 +1,22 @@
+<div class="calendar">
+  <div class="day">
+    <div *ngFor="let hour of hours" class="hour" cdkDropList [cdkDropListData]="appointmentsByHour[hour]" (cdkDropListDropped)="drop($event)" 
+    (click)="openDialog()">
+      <div class="hour-label">{{ hour }}</div>
+      <div class="appointments">
+        <div *ngFor="let appointment of appointmentsByHour[hour]" cdkDrag class="appointment" (dblclick)="editAppointment(appointment)">
+          {{ appointment.title }}
+          <button (click)="deleteAppointment(appointment)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="appointment-form">
+  <input [(ngModel)]="appointmentTitle" placeholder="Appointment Title">
+  <input [(ngModel)]="appointmentDate" type="datetime-local" placeholder="Appointment Date">
+  <button (click)="editingAppointment ? updateAppointment() : addAppointment()">
+    {{ editingAppointment ? 'Update' : 'Add' }} Appointment
+  </button>
+</div>

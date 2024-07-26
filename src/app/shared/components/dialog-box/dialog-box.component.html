@@ -1,0 +1,24 @@
+<div class="flex flex-col justify-center items-center h-full">
+  <h1 class="mt-4" mat-dialog-title>{{data.title ? 'Edit Appointment' : 'New Appointment'}}</h1>
+  <div mat-dialog-content class="w-full">
+    <form [formGroup]="appointmentForm" class="appointment-form flex flex-col justify-center items-center w-full">
+      <mat-form-field class="w-4/5  my-1">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title">
+      </mat-form-field>
+      <mat-form-field class="w-4/5  my-1">
+        <mat-label>Start Time</mat-label>
+        <input matInput type="time" formControlName="startTime">
+      </mat-form-field>
+
+      <mat-form-field class="w-4/5  my-1">
+        <mat-label>End Time</mat-label>
+        <input matInput type="time" formControlName="endTime">
+      </mat-form-field>
+    </form>
+  </div>
+  <div class="mt-5" mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Close</button>
+    <button mat-button color="primary" (click)="onSave()" [disabled]="!appointmentForm.valid">Save</button>
+  </div>
+</div>
