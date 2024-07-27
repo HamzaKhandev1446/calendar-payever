@@ -1,14 +1,11 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav class="sidenav" mode="side" opened>
     <div class="w-full h-full flex flex-col justify-start items-center">
-      <!-- <div class="my-3">
-          <button (click)="addAppointment()"
-            class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline flex justify-center items-center min-w-48 min-h-10 font-sans font-normal text-lg">
-            Add Appointment
-          </button>
-        </div> -->
       <div class="my-3">
         <app-date-picker (setDate)="setCalendarDate($event)"></app-date-picker>
+      </div>
+      <div>
+        <app-scheduled-appointments (selectedAppointment)="selectScheduledAppointment($event)"></app-scheduled-appointments>
       </div>
     </div>
   </mat-sidenav>

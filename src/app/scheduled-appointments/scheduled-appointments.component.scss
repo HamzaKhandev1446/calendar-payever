@@ -1,0 +1,37 @@
+.scheduled-appointments-container {
+    padding: 16px;
+    max-height: 700px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .appointments-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .appointment-item {
+    padding: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+  }
+  
+  .appointment-title {
+    font-weight: bold;
+  }
+  
+  .appointment-time {
+    font-size: 0.9em;
+    color: #555;
+  }
+  
+  .no-appointments {
+    padding: 8px;
+    text-align: center;
+    color: #777;
+  }
+  

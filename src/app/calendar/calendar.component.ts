@@ -8,12 +8,11 @@ import { AppointmentsDayViewComponent } from '../appointments-day-view/appointme
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { SelectDropdownComponent } from '../shared/components/select-dropdown/select-dropdown.component';
 import { TimePeriod } from '../shared/enums/time-periods-dropdown';
-import { ICalenderDropDownOption } from '../shared/interfaces/calender.interfaces';
-
-interface Appointment {
-  title: string;
-  date: Date;
-}
+import { Appointment, ICalenderDropDownOption } from '../shared/interfaces/calender.interfaces';
+import { AppointmentCalendarService } from '../shared/services/appointment-calendar.service';
+import moment from 'moment';
+import { Observable } from 'rxjs';
+import { ScheduledAppointmentsComponent } from '../scheduled-appointments/scheduled-appointments.component';
 
 @Component({
   selector: 'app-calendar',
@@ -27,6 +26,7 @@ interface Appointment {
     AppointmentsDayViewComponent,
     RouterModule,
     SelectDropdownComponent,
+    ScheduledAppointmentsComponent, 
   ],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
@@ -36,48 +36,59 @@ export class CalendarComponent implements OnInit {
   selectedCalenderDate: Date = new Date();
   appointmentsByHour: { [key: string]: Appointment[] } = {};
   selectedOption: string = TimePeriod.Day;
+  allAppointments$: Observable<Appointment[]>;  
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private appointmentCalendarService: AppointmentCalendarService
+  ) {
+    this.allAppointments$ = this.appointmentCalendarService.getAllScheduledAppointments();
+  }
 
   ngOnInit() {
     this.setCalenderDropdown();
-    
+    this.setDropDownSelectedOption(this.selectedOption);
     this.setCalendarDate(null);
   }
 
-  setCalenderDropdown(){
+  setCalenderDropdown() {
     this.calendarOptions = [
       { value: TimePeriod.Day, viewValue: 'Day', disabled: false },
       { value: TimePeriod.Week, viewValue: 'Week', disabled: true },
       { value: TimePeriod.Month, viewValue: 'Month', disabled: true },
       { value: TimePeriod.Year, viewValue: 'Year', disabled: true },
     ];
-    this.setDropDownSelectedOption(this.selectedOption);
   }
 
   setCalendarDate(event: Date | null) {
     this.selectedCalenderDate = event || new Date();
-    this.setDateRouteParams(this.selectedCalenderDate || new Date());
+    const formatedDate = moment(this.selectedCalenderDate).format('YYYY-MM-DD');
+    this.setDateRouteParams(formatedDate);
   }
-  
+
   setDropDownSelectedOption(option: string) {
-    this.router.navigate([option.toLowerCase()], { relativeTo: this.activatedRoute });
-  }
-
-  setDateRouteParams(date: Date) {
-    this.router.navigate([], {
+    this.selectedOption = option;
+    this.router.navigate([option.toLowerCase()], {
       relativeTo: this.activatedRoute,
-      queryParams: { date: date.toISOString() },
+      queryParams: { date: this.selectedCalenderDate.toISOString() },
       queryParamsHandling: 'merge',
-    }); 
+    });
   }
 
-  addAppointment() {
-    // Add appointment logic
+  setDateRouteParams(date: string) {
+    this.router.navigate(['day'], {
+      relativeTo: this.activatedRoute,
+      queryParams: { date: date },
+      queryParamsHandling: 'merge',
+    });
   }
 
   onDropdownSelectionChange(value: string) {
-    this.selectedOption = value;
     this.setDropDownSelectedOption(value);
+  }
+
+  selectScheduledAppointment(date: string) {
+    this.setCalendarDate(new Date(date));
   }
 }

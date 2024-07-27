@@ -5,3 +5,10 @@ export interface ICalenderDropDownOption {
     viewValue: string;
     disabled: boolean;
   }
+
+  export interface Appointment {
+    title: string;
+    startTime: string;
+    endTime: string;
+    time?: string;
+  }
